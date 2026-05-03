@@ -2,6 +2,11 @@
 
 All notable changes to `pi-model-provider-native-prompting` are documented here.
 
+## 0.2.3
+
+- Fixed Codex-family overlay inheritance so OpenAI Codex models receive both OpenAI-family guidance and Codex-specific guidance.
+- Documented the additive OpenAI + Codex mapping in README.
+
 ## 0.2.2
 
 - Removed internal research/planning notes from the public repository and rewritten git history.

@@ -35,7 +35,7 @@ pi install git:github.com/henryennis/pi-model-provider-native-prompting
 Pin a release tag:
 
 ```bash
-pi install git:github.com/henryennis/pi-model-provider-native-prompting@v0.2.2
+pi install git:github.com/henryennis/pi-model-provider-native-prompting@v0.2.3
 ```
 
 ## What It Does
@@ -77,14 +77,14 @@ Model family is not harness identity. The overlay explicitly tells the model not
 | Active model metadata | Added guidance |
 | --- | --- |
 | OpenAI provider/API or `gpt-*` id | OpenAI-family guidance |
-| OpenAI Codex provider or `codex` id | OpenAI Codex-family guidance |
+| OpenAI Codex provider or `codex` id | OpenAI-family + OpenAI Codex-family guidance |
 | Anthropic provider/API or `claude` id | Anthropic-family guidance |
 | Google/Gemini provider/API/id | Google-family guidance |
 | `model.reasoning === true` | Reasoning-model guidance |
 | `model.contextWindow < 64000` | Small-context guidance |
 | Unknown/custom model | Universal overlay only |
 
-Provider fragments are additive; they never replace the universal overlay.
+Provider fragments are additive; they never replace the universal overlay. Codex-family models also receive OpenAI-family guidance because Codex is an OpenAI model family.
 
 ## Compatibility
 

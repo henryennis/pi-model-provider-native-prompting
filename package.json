@@ -1,6 +1,6 @@
 {
   "name": "pi-model-provider-native-prompting",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Provider-informed, harness-neutral native prompting guidance for Pi Coding Agent.",
   "type": "module",
   "main": "./extensions/model-provider-native-prompting.js",

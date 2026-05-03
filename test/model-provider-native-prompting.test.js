@@ -6,6 +6,7 @@ import modelProviderNativePrompting, {
 	buildOverlay,
 	classifyModel,
 	getCurrentSystemPrompt,
+	getProviderOverlayKeys,
 	insertOverlay,
 } from "../extensions/model-provider-native-prompting.js";
 
@@ -64,6 +65,33 @@ describe("classifyModel", () => {
 	});
 });
 
+describe("getProviderOverlayKeys", () => {
+	it("layers OpenAI-family guidance before Codex-specific guidance", () => {
+		assert.deepEqual(
+			getProviderOverlayKeys({ ...baseModel, provider: "openai-codex", id: "gpt-5.5" }),
+			["openai", "openai-codex"],
+		);
+	});
+
+	it("layers OpenAI-family guidance for Codex ids under the OpenAI provider", () => {
+		assert.deepEqual(
+			getProviderOverlayKeys({ ...baseModel, provider: "openai", id: "gpt-5.2-codex" }),
+			["openai", "openai-codex"],
+		);
+	});
+
+	it("keeps generic OpenAI models out of Codex-specific guidance", () => {
+		assert.deepEqual(
+			getProviderOverlayKeys({ ...baseModel, provider: "openai", id: "gpt-5.5" }),
+			["openai"],
+		);
+	});
+
+	it("returns no provider overlays for unknown models", () => {
+		assert.deepEqual(getProviderOverlayKeys({ ...baseModel, provider: "custom", id: "local-model" }), []);
+	});
+});
+
 describe("buildOverlay", () => {
 	it("includes capability overlays for reasoning and small context models", () => {
 		const overlay = buildOverlay({ ...baseModel, reasoning: true, contextWindow: 32000 });
@@ -77,6 +105,22 @@ describe("buildOverlay", () => {
 		const overlay = buildOverlay({ ...baseModel, provider: "google", id: "gemini-2.5-flash" });
 
 		assert.match(overlay, /Google-Family Guidance/);
+	});
+
+	it("includes OpenAI-family guidance for Codex-family models", () => {
+		const overlay = buildOverlay({ ...baseModel, provider: "openai-codex", id: "gpt-5.5", reasoning: true });
+
+		assert.match(overlay, /OpenAI-Family Guidance/);
+		assert.match(overlay, /Be explicit about what is known, what is assumed, and what will be verified\./);
+		assert.match(overlay, /OpenAI Codex-Family Guidance/);
+		assert.ok(overlay.indexOf("OpenAI-Family Guidance") < overlay.indexOf("OpenAI Codex-Family Guidance"));
+	});
+
+	it("keeps generic OpenAI models out of Codex-specific guidance", () => {
+		const overlay = buildOverlay({ ...baseModel, provider: "openai", id: "gpt-5.5" });
+
+		assert.match(overlay, /OpenAI-Family Guidance/);
+		assert.doesNotMatch(overlay, /OpenAI Codex-Family Guidance/);
 	});
 
 	it("keeps provider overlays additive", () => {

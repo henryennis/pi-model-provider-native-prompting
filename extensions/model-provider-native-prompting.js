@@ -80,10 +80,23 @@ function classifyModel(model) {
 	return "generic";
 }
 
+function getProviderOverlayKeys(model) {
+	const family = classifyModel(model);
+
+	if (family === "openai-codex") {
+		return ["openai", "openai-codex"];
+	}
+
+	if (PROVIDER_OVERLAYS[family]) {
+		return [family];
+	}
+
+	return [];
+}
+
 function buildOverlay(model) {
 	const parts = [UNIVERSAL_OVERLAY];
-	const family = classifyModel(model);
-	const providerOverlay = PROVIDER_OVERLAYS[family];
+	const providerOverlays = getProviderOverlayKeys(model).map((key) => PROVIDER_OVERLAYS[key]);
 
 	if (model?.reasoning) {
 		parts.push(REASONING_MODEL_OVERLAY);
@@ -93,9 +106,7 @@ function buildOverlay(model) {
 		parts.push(SMALL_CONTEXT_OVERLAY);
 	}
 
-	if (providerOverlay) {
-		parts.push(providerOverlay);
-	}
+	parts.push(...providerOverlays);
 
 	return parts.join("\n\n");
 }
@@ -144,5 +155,6 @@ export {
 	buildOverlay,
 	classifyModel,
 	getCurrentSystemPrompt,
+	getProviderOverlayKeys,
 	insertOverlay,
 };
