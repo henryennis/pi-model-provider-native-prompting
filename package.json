@@ -1,0 +1,47 @@
+{
+  "name": "pi-model-provider-native-prompting",
+  "version": "0.2.2",
+  "description": "Provider-informed, harness-neutral native prompting guidance for Pi Coding Agent.",
+  "type": "module",
+  "main": "./extensions/model-provider-native-prompting.js",
+  "files": [
+    "extensions/model-provider-native-prompting.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "pi-coding-agent",
+    "coding-agent",
+    "model-provider",
+    "native-prompting",
+    "prompt-overlay"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/henryennis/pi-model-provider-native-prompting.git"
+  },
+  "bugs": {
+    "url": "https://github.com/henryennis/pi-model-provider-native-prompting/issues"
+  },
+  "homepage": "https://github.com/henryennis/pi-model-provider-native-prompting#readme",
+  "pi": {
+    "extensions": [
+      "./extensions/model-provider-native-prompting.js"
+    ]
+  },
+  "scripts": {
+    "check": "node --check extensions/model-provider-native-prompting.js && node --test",
+    "pack:dry-run": "npm pack --dry-run",
+    "prepublishOnly": "npm run check",
+    "test": "node --test"
+  },
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": ">=0.72.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
